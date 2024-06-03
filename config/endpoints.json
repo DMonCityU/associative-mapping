@@ -1,0 +1,58 @@
+[
+    {
+        "name": "DBPedia",
+        "available": true,
+        "url": "https://dbpedia.org/sparql/",
+        "data_path": "https://dbpedia.org/data/",
+        "ontology_base_url": "http://dbpedia.org/ontology/",
+        "default-graph-uri": "http://dbpedia.org",
+        "url_key": "value",
+        "refresh": false,
+        "query_template": "SELECT ?item ?itemLabel ?itemDescription WHERE {{ ?item rdfs:label \"{term}\"@en. ?item rdfs:label ?itemLabel. ?item rdfs:comment ?itemDescription. FILTER (lang(?itemLabel) = \"en\" && lang(?itemDescription) = \"en\") }} LIMIT 5",
+        "headers": {
+            "User-Agent": "Mozilla/5.0",
+            "Accept": "application/sparql-results+json"
+        },
+        "timeout": "10000",
+        "signal_void": "on",
+        "signal_unconnected": "on",
+        "format": "application/sparql-results+json",
+        "results_keys": ["results|bindings"],
+        "description_keys": ["itemDescription|value"],
+        "identifier_keys": ["item|value"],
+        "label_keys": ["itemLabel|value"]
+    },
+    {
+        "name": "Getty",
+        "available": true,
+        "url": "https://vocab.getty.edu/sparql",
+        "data_path": "http://vocab.getty.edu/aat/",
+        "url_key": "value",
+        "refresh": false,
+        "query_template": "PREFIX skos: <http://www.w3.org/2004/02/skos/core#> PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> SELECT ?resource ?label ?description WHERE {{ ?resource rdfs:label \"{term}\"@en. ?resource rdfs:label ?label. FILTER (lang(?label) = \"en\") ?resource skos:scopeNote ?scopeNoteURI. ?scopeNoteURI rdf:value ?description. FILTER (lang(?description) = \"en\") }}",
+        "headers": {
+            "User-Agent": "Mozilla/5.0",
+            "Accept": "application/sparql-results+json"
+        },
+        "results_keys": ["results|bindings"],
+        "description_keys": ["itemDescription|value"],
+        "identifier_keys": ["item|value"],
+        "label_keys": ["itemLabel|value"]
+    },
+    {
+        "name": "Wikidata",
+        "available": true,
+        "url": "https://query.wikidata.org/sparql",
+        "data_path": "https://www.wikidata.org/wiki/Special:EntityData",
+        "refresh": false,
+        "query_template": "SELECT ?item ?itemLabel ?itemDescription WHERE {{ ?item ?p \"{term}\"@en. ?article schema:about ?item. ?article schema:inLanguage \"en\". ?article schema:isPartOf <https://en.wikipedia.org/>. SERVICE wikibase:label {{ bd:serviceParam wikibase:language \"en\" }} }} LIMIT 5",
+        "headers": {
+            "User-Agent": "Mozilla/5.0",
+            "Accept": "application/sparql-results+json"
+        },
+        "results_keys": ["results|bindings"],
+        "description_keys": ["itemDescription|value"],
+        "identifier_keys": ["item|value"],
+        "label_keys": ["itemLabel|value"]
+    }
+]
