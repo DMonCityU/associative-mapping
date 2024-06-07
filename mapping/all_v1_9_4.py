@@ -2038,26 +2038,30 @@ def load_and_extract_definitions(term, endpoint, base_path, file=None):
     return None
 
 @audit_logger(functions_to_audit)
-def fetch_nodes(tx, node_labels_and_keys, override_query=None):
+def fetch_nodes(tx, node_labels_and_keys, override_query=None, add_labels=True):
     nodes_list = []
     if override_query:
-        node_query = override_query
-        logger.critical("Default query overridden! If you don't know what you're doing, quit now!")
-        result = tx.run(node_query)
-        records = result.data()
-        for record in records:
-            nodes_list.append((label_key, record['n']))
+        node_queries  = [override_query]
     else:
+        node_queries = []
         for label_key in node_labels_and_keys.keys():
             node_query = f"""
             MATCH (n:{label_key})
             RETURN n
             ORDER BY rand() 
             """
+            node_queries.append(node_query)
+
+    for label_key in node_labels_and_keys.keys():
+        for node_query in node_queries:
+            logger.critical(f"Running query: {node_query}")
             result = tx.run(node_query)
             records = result.data()
             for record in records:
-                nodes_list.append((label_key, record['n']))
+                if add_labels:
+                    nodes_list.append((label_key, record['n']))
+                else:
+                    nodes_list.append(record['n'])
     return nodes_list
 
 @audit_logger(functions_to_audit)

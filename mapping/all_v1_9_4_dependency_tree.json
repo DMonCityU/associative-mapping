@@ -1,0 +1,768 @@
+{
+    "helper": {
+        "downstream": [
+            "helper"
+        ],
+        "upstream": [
+            "helper"
+        ]
+    },
+    "local_path": {
+        "downstream": [],
+        "upstream": [
+            "save_json",
+            "load_json"
+        ]
+    },
+    "encode_contexts": {
+        "downstream": [
+            "get_context",
+            "encode_context"
+        ],
+        "upstream": [
+            "process_multiple_samples"
+        ]
+    },
+    "process_multiple_samples": {
+        "downstream": [
+            "encode_contexts"
+        ],
+        "upstream": []
+    },
+    "get_context": {
+        "downstream": [],
+        "upstream": [
+            "encode_contexts",
+            "process_and_encode_samples"
+        ]
+    },
+    "get_embedding": {
+        "downstream": [],
+        "upstream": [
+            "process_candidate_definitions",
+            "encode_context"
+        ]
+    },
+    "encode_context": {
+        "downstream": [
+            "get_embedding"
+        ],
+        "upstream": [
+            "process_node_fields",
+            "encode_contexts",
+            "process_and_encode_samples",
+            "filter_mentions_by_longest_term"
+        ]
+    },
+    "process_and_encode_samples": {
+        "downstream": [
+            "get_context",
+            "encode_context"
+        ],
+        "upstream": []
+    },
+    "convert_to_serializable": {
+        "downstream": [
+            "convert_to_serializable"
+        ],
+        "upstream": [
+            "collect_and_process_contexts",
+            "convert_to_serializable",
+            "process_candidate_definitions",
+            "serialize_processed_data"
+        ]
+    },
+    "serialize_processed_data": {
+        "downstream": [
+            "convert_to_serializable"
+        ],
+        "upstream": []
+    },
+    "convert_sample_texts_to_dict": {
+        "downstream": [],
+        "upstream": []
+    },
+    "find_term_mentions": {
+        "downstream": [],
+        "upstream": []
+    },
+    "find_mentions_in_samples": {
+        "downstream": [],
+        "upstream": []
+    },
+    "normalize_candidate_definitions": {
+        "downstream": [
+            "format_json_topology"
+        ],
+        "upstream": [
+            "process_candidate_definitions"
+        ]
+    },
+    "collect_and_process_contexts": {
+        "downstream": [
+            "rank_embeddings",
+            "convert_to_serializable",
+            "process_candidate_definitions"
+        ],
+        "upstream": []
+    },
+    "rank_embeddings": {
+        "downstream": [
+            "format_json_topology"
+        ],
+        "upstream": [
+            "collect_and_process_contexts",
+            "add_best_lodc_definitions",
+            "filter_mentions_by_longest_term"
+        ]
+    },
+    "extract_definitions": {
+        "downstream": [
+            "collect_values_with_key_specific_filters"
+        ],
+        "upstream": []
+    },
+    "get_values_from_json_path": {
+        "downstream": [
+            "match_json_path"
+        ],
+        "upstream": [
+            "fetch_urls"
+        ]
+    },
+    "match_json_path": {
+        "downstream": [],
+        "upstream": [
+            "get_values_from_json_path",
+            "segregate_json_by_path"
+        ]
+    },
+    "recursive_search": {
+        "downstream": [
+            "recursive_search"
+        ],
+        "upstream": [
+            "recursive_search"
+        ]
+    },
+    "nest_secondary_json": {
+        "downstream": [],
+        "upstream": [
+            "process_endpoints"
+        ]
+    },
+    "nest_data": {
+        "downstream": [
+            "nest_data"
+        ],
+        "upstream": [
+            "nest_data"
+        ]
+    },
+    "segregate_json_by_path": {
+        "downstream": [
+            "match_json_path"
+        ],
+        "upstream": []
+    },
+    "save_json": {
+        "downstream": [
+            "local_path"
+        ],
+        "upstream": [
+            "save_json_with_term"
+        ]
+    },
+    "load_json": {
+        "downstream": [
+            "local_path"
+        ],
+        "upstream": [
+            "get_primary_json",
+            "create_definitions_dictionary",
+            "load_and_extract_definitions"
+        ]
+    },
+    "save_json_response": {
+        "downstream": [
+            "save_json_with_term"
+        ],
+        "upstream": [
+            "process_endpoints"
+        ]
+    },
+    "save_json_with_term": {
+        "downstream": [
+            "save_json"
+        ],
+        "upstream": [
+            "save_json_response"
+        ]
+    },
+    "set_in_path": {
+        "downstream": [],
+        "upstream": []
+    },
+    "fetch_urls": {
+        "downstream": [
+            "get_values_from_json_path"
+        ],
+        "upstream": [
+            "process_endpoints"
+        ]
+    },
+    "fetch_json_data": {
+        "downstream": [
+            "get_request"
+        ],
+        "upstream": [
+            "get_secondary_json"
+        ]
+    },
+    "refine_phrase": {
+        "downstream": [],
+        "upstream": [
+            "extract_keyphrases"
+        ]
+    },
+    "extract_keyphrases": {
+        "downstream": [
+            "refine_phrase"
+        ],
+        "upstream": [
+            "process_csv_in_chunks"
+        ]
+    },
+    "get_last_processed_chunk": {
+        "downstream": [],
+        "upstream": [
+            "process_csv_in_chunks"
+        ]
+    },
+    "set_last_processed_chunk": {
+        "downstream": [],
+        "upstream": [
+            "process_csv_in_chunks"
+        ]
+    },
+    "create_dataframe_from_values": {
+        "downstream": [],
+        "upstream": []
+    },
+    "process_csv_in_chunks": {
+        "downstream": [
+            "set_last_processed_chunk",
+            "extract_keyphrases",
+            "get_last_processed_chunk"
+        ],
+        "upstream": []
+    },
+    "load_csv_files": {
+        "downstream": [],
+        "upstream": []
+    },
+    "get_neo4j_connection": {
+        "downstream": [],
+        "upstream": []
+    },
+    "run_transaction": {
+        "downstream": [],
+        "upstream": [
+            "fetch_nodes_wrapper"
+        ]
+    },
+    "format_value": {
+        "downstream": [
+            "format_dict",
+            "format_list"
+        ],
+        "upstream": [
+            "format_dict",
+            "format_mentions",
+            "format_list",
+            "format_top_mentions"
+        ]
+    },
+    "format_dict": {
+        "downstream": [
+            "format_value"
+        ],
+        "upstream": [
+            "format_value",
+            "format_node"
+        ]
+    },
+    "format_list": {
+        "downstream": [
+            "format_value"
+        ],
+        "upstream": [
+            "format_value"
+        ]
+    },
+    "format_mentions": {
+        "downstream": [
+            "format_value"
+        ],
+        "upstream": [
+            "get_mentions_from_node"
+        ]
+    },
+    "format_node": {
+        "downstream": [
+            "format_dict"
+        ],
+        "upstream": []
+    },
+    "format_top_mentions": {
+        "downstream": [
+            "format_value"
+        ],
+        "upstream": []
+    },
+    "get_node_id": {
+        "downstream": [],
+        "upstream": [
+            "create_query_from_mention"
+        ]
+    },
+    "has_non_empty_mentions": {
+        "downstream": [],
+        "upstream": [
+            "remove_nodes_without_mentions"
+        ]
+    },
+    "choose_random_nodes": {
+        "downstream": [
+            "run_query"
+        ],
+        "upstream": []
+    },
+    "generate_merge_relationship_query": {
+        "downstream": [],
+        "upstream": [
+            "create_query_from_mention"
+        ]
+    },
+    "format_json_topology": {
+        "downstream": [
+            "get_json_topology"
+        ],
+        "upstream": [
+            "add_best_lodc_definitions",
+            "normalize_candidate_definitions",
+            "process_candidate_definitions",
+            "create_query_from_mention",
+            "rank_embeddings"
+        ]
+    },
+    "create_query_from_mention": {
+        "downstream": [
+            "generate_merge_relationship_query",
+            "format_json_topology",
+            "generate_import_rdf_query",
+            "get_node_id"
+        ],
+        "upstream": [
+            "generate_and_execute_queries"
+        ]
+    },
+    "get_mentions_from_node": {
+        "downstream": [
+            "format_mentions"
+        ],
+        "upstream": []
+    },
+    "remove_nodes_without_mentions": {
+        "downstream": [
+            "has_non_empty_mentions"
+        ],
+        "upstream": []
+    },
+    "generate_import_rdf_query": {
+        "downstream": [],
+        "upstream": [
+            "create_query_from_mention"
+        ]
+    },
+    "unpack_node": {
+        "downstream": [],
+        "upstream": []
+    },
+    "get_request": {
+        "downstream": [],
+        "upstream": [
+            "fetch_json_data",
+            "fetch_and_cache_json"
+        ]
+    },
+    "__init__": {
+        "downstream": [],
+        "upstream": []
+    },
+    "add_url": {
+        "downstream": [],
+        "upstream": []
+    },
+    "add_urls": {
+        "downstream": [],
+        "upstream": []
+    },
+    "remove_url": {
+        "downstream": [],
+        "upstream": []
+    },
+    "__contains__": {
+        "downstream": [],
+        "upstream": []
+    },
+    "__iter__": {
+        "downstream": [],
+        "upstream": []
+    },
+    "clear": {
+        "downstream": [],
+        "upstream": []
+    },
+    "handle_ontology_url": {
+        "downstream": [],
+        "upstream": [
+            "get_secondary_json"
+        ]
+    },
+    "add_best_lodc_definitions": {
+        "downstream": [
+            "format_json_topology",
+            "process_candidate_definitions",
+            "filter_mentions_by_longest_term",
+            "find_mentions_and_context",
+            "rank_embeddings"
+        ],
+        "upstream": [
+            "process_nodes"
+        ]
+    },
+    "deduplicate_terms": {
+        "downstream": [],
+        "upstream": []
+    },
+    "extract_terms_and_expansions": {
+        "downstream": [],
+        "upstream": []
+    },
+    "get_term_positions": {
+        "downstream": [],
+        "upstream": []
+    },
+    "find_term_index": {
+        "downstream": [],
+        "upstream": []
+    },
+    "load_and_extract_definitions": {
+        "downstream": [
+            "search_json_for_keys",
+            "load_json"
+        ],
+        "upstream": [
+            "process_candidate_definitions"
+        ]
+    },
+    "fetch_nodes": {
+        "downstream": [],
+        "upstream": []
+    },
+    "fetch_nodes_wrapper": {
+        "downstream": [
+            "run_transaction"
+        ],
+        "upstream": [
+            "fetch_and_process_nodes"
+        ]
+    },
+    "add_mentions_to_node": {
+        "downstream": [],
+        "upstream": [
+            "process_node_fields"
+        ]
+    },
+    "load_terms": {
+        "downstream": [],
+        "upstream": []
+    },
+    "find_mentions_and_context": {
+        "downstream": [
+            "create_definitions_dictionary"
+        ],
+        "upstream": [
+            "process_node_fields",
+            "add_best_lodc_definitions"
+        ]
+    },
+    "process_endpoints": {
+        "downstream": [
+            "save_json_response",
+            "get_secondary_json",
+            "nest_secondary_json",
+            "get_primary_json",
+            "fetch_urls"
+        ],
+        "upstream": []
+    },
+    "get_primary_json": {
+        "downstream": [
+            "fetch_and_cache_json",
+            "load_json"
+        ],
+        "upstream": [
+            "process_endpoints"
+        ]
+    },
+    "get_secondary_json": {
+        "downstream": [
+            "handle_ontology_url",
+            "remove_duplicates_from_json",
+            "fetch_json_data"
+        ],
+        "upstream": [
+            "process_endpoints"
+        ]
+    },
+    "fetch_and_cache_json": {
+        "downstream": [
+            "generate_casing_combinations",
+            "get_request"
+        ],
+        "upstream": [
+            "get_primary_json"
+        ]
+    },
+    "generate_casing_combinations": {
+        "downstream": [],
+        "upstream": [
+            "fetch_and_cache_json"
+        ]
+    },
+    "unpack_sublists": {
+        "downstream": [
+            "unpack_sublists"
+        ],
+        "upstream": [
+            "unpack_sublists",
+            "search_json_for_keys"
+        ]
+    },
+    "search_json_for_keys": {
+        "downstream": [
+            "unpack_sublists",
+            "search_json_for_keys"
+        ],
+        "upstream": [
+            "filter_json_by_keys",
+            "search_json_for_keys",
+            "load_and_extract_definitions"
+        ]
+    },
+    "remove_duplicates_from_json": {
+        "downstream": [],
+        "upstream": [
+            "get_secondary_json",
+            "make_hashable",
+            "filter_and_deduplicate_json"
+        ]
+    },
+    "make_hashable": {
+        "downstream": [
+            "make_hashable",
+            "remove_duplicates_from_json"
+        ],
+        "upstream": [
+            "make_hashable"
+        ]
+    },
+    "remove_empty": {
+        "downstream": [
+            "remove_empty"
+        ],
+        "upstream": [
+            "recursive_apply",
+            "remove_empty"
+        ]
+    },
+    "apply_filters": {
+        "downstream": [],
+        "upstream": [
+            "filter_and_deduplicate_json"
+        ]
+    },
+    "apply_filter_to_list": {
+        "downstream": [],
+        "upstream": [
+            "recursive_apply"
+        ]
+    },
+    "recursive_apply": {
+        "downstream": [
+            "apply_filter_to_list",
+            "recursive_apply",
+            "remove_empty"
+        ],
+        "upstream": [
+            "recursive_apply"
+        ]
+    },
+    "filter_and_deduplicate_json": {
+        "downstream": [
+            "remove_duplicates_from_json",
+            "apply_filters",
+            "filter_and_deduplicate_json"
+        ],
+        "upstream": [
+            "filter_json_by_keys",
+            "filter_and_deduplicate_json"
+        ]
+    },
+    "search_json": {
+        "downstream": [
+            "search_json"
+        ],
+        "upstream": [
+            "search_json",
+            "collect_values_with_key_specific_filters"
+        ]
+    },
+    "collect_values_with_key_specific_filters": {
+        "downstream": [
+            "search_json"
+        ],
+        "upstream": [
+            "extract_definitions"
+        ]
+    },
+    "filter_json_by_keys": {
+        "downstream": [
+            "filter_and_deduplicate_json",
+            "search_json_for_keys"
+        ],
+        "upstream": []
+    },
+    "filter_mentions_by_longest_term": {
+        "downstream": [
+            "rank_embeddings",
+            "process_candidate_definitions",
+            "encode_context"
+        ],
+        "upstream": [
+            "add_best_lodc_definitions"
+        ]
+    },
+    "process_candidate_definitions": {
+        "downstream": [
+            "format_json_topology",
+            "normalize_candidate_definitions",
+            "convert_to_serializable",
+            "load_and_extract_definitions",
+            "get_embedding"
+        ],
+        "upstream": [
+            "collect_and_process_contexts",
+            "add_best_lodc_definitions",
+            "filter_mentions_by_longest_term"
+        ]
+    },
+    "create_definitions_dictionary": {
+        "downstream": [
+            "load_json"
+        ],
+        "upstream": [
+            "find_mentions_and_context"
+        ]
+    },
+    "fetch_and_process_nodes": {
+        "downstream": [
+            "process_nodes",
+            "fetch_nodes_wrapper"
+        ],
+        "upstream": []
+    },
+    "process_nodes": {
+        "downstream": [
+            "process_node_fields",
+            "generate_and_execute_queries",
+            "add_best_lodc_definitions"
+        ],
+        "upstream": [
+            "fetch_and_process_nodes"
+        ]
+    },
+    "process_node_fields": {
+        "downstream": [
+            "find_mentions_and_context",
+            "add_mentions_to_node",
+            "encode_context"
+        ],
+        "upstream": [
+            "process_nodes"
+        ]
+    },
+    "generate_and_execute_queries": {
+        "downstream": [
+            "create_query_from_mention",
+            "run_query"
+        ],
+        "upstream": [
+            "process_nodes"
+        ]
+    },
+    "run_query": {
+        "downstream": [],
+        "upstream": [
+            "choose_random_nodes",
+            "generate_and_execute_queries"
+        ]
+    },
+    "transaction_function": {
+        "downstream": [],
+        "upstream": []
+    },
+    "get_json_topology": {
+        "downstream": [],
+        "upstream": [
+            "compare_json_structures",
+            "format_json_topology"
+        ]
+    },
+    "_explore": {
+        "downstream": [
+            "_explore"
+        ],
+        "upstream": [
+            "_explore"
+        ]
+    },
+    "normalize_structure": {
+        "downstream": [
+            "normalize_structure"
+        ],
+        "upstream": [
+            "compare_json_structures",
+            "normalize_structure"
+        ]
+    },
+    "remove_keys": {
+        "downstream": [
+            "remove_keys"
+        ],
+        "upstream": [
+            "compare_json_structures",
+            "remove_keys"
+        ]
+    },
+    "compare_json_structures": {
+        "downstream": [
+            "normalize_structure",
+            "get_json_topology",
+            "remove_keys"
+        ],
+        "upstream": []
+    }
+}
