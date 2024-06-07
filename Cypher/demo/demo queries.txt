@@ -1,0 +1,62 @@
+// Single random unpacked loop
+// Returns a random unpacked loop
+CALL apoc.cypher.run(
+  "MATCH (s)-[ir1:INFERRED_REFERENCE]->()
+   WITH s, rand() AS rand
+   ORDER BY rand
+   LIMIT 1
+   MATCH loop=(s)-[ir1:INFERRED_REFERENCE]->(r)<-[:LODC_DEFINITION]-()<-[*1..3]-(s)
+   RETURN loop LIMIT 1",
+  {}
+) YIELD value
+RETURN value.loop
+
+
+// Small random sample
+// Combine results from both queries
+CALL {
+    // Direct coreference
+    MATCH (s:STIG)-[ir1:INFERRED_REFERENCE]->(r)<-[ir2:INFERRED_REFERENCE]-(c:rev5Control)
+    WITH s, ir1, r, ir2, c
+    ORDER BY rand()
+    RETURN s, ir1, r AS resource, null AS lr, null AS r2, ir2, c
+    LIMIT 5
+    
+    UNION ALL
+    
+    // Indirect coreference
+    MATCH (s:STIG)-[ir1:INFERRED_REFERENCE]->(r1)-[lr:LEARNED_ASSOCIATION]-(r2)<-[ir2:INFERRED_REFERENCE]-(c:rev5Control)
+    WITH s, ir1, r1, lr, r2, ir2, c
+    RETURN s, ir1, r1 AS resource, lr, r2, ir2, c
+    LIMIT 5
+} 
+WITH s, ir1, resource, lr, r2, ir2, c
+
+OPTIONAL MATCH (rmf)<-[ic:IN_CATALOG]-(g)<-[ig:IN_GROUP]-(c)
+OPTIONAL MATCH (rmf)<-[ic:IN_CATALOG]-(g)<-[ig:IN_GROUP]-(ec)<-[ieo:IS_ENHANCEMENT_OF]-(c:Enhancement)
+RETURN *
+
+
+// Large random sample
+// Combine results from both queries
+CALL {
+    // Direct coreference
+    MATCH (s:STIG)-[ir1:INFERRED_REFERENCE]->(r)<-[ir2:INFERRED_REFERENCE]-(c:rev5Control)
+    WITH s, ir1, r, ir2, c
+    ORDER BY rand()
+    RETURN s, ir1, r AS resource, null AS lr, null AS r2, ir2, c
+    LIMIT 200
+    
+    UNION ALL
+    
+    // Indirect coreference
+    MATCH (s:STIG)-[ir1:INFERRED_REFERENCE]->(r1)-[lr:LEARNED_ASSOCIATION]-(r2)<-[ir2:INFERRED_REFERENCE]-(c:rev5Control)
+    WITH s, ir1, r1, lr, r2, ir2, c
+    RETURN s, ir1, r1 AS resource, lr, r2, ir2, c
+    LIMIT 200
+} 
+WITH s, ir1, resource, lr, r2, ir2, c
+
+OPTIONAL MATCH (rmf)<-[ic:IN_CATALOG]-(g)<-[ig:IN_GROUP]-(c)
+OPTIONAL MATCH (rmf)<-[ic:IN_CATALOG]-(g)<-[ig:IN_GROUP]-(ec)<-[ieo:IS_ENHANCEMENT_OF]-(c:Enhancement)
+RETURN *

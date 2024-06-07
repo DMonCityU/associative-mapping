@@ -1,0 +1,25 @@
+// Map of strong associations
+MATCH p=()-[r:LEARNED_ASSOCIATION]-()
+WHERE r.strength > 0.15
+WITH p, r ORDER BY r.strength DESC
+RETURN p
+LIMIT 100
+
+// Step 1: Materialize Paths
+MATCH (s1)-[:CONTAINS]->(f1)-[:HAS_NORMALIZED_PROPERTY]->(np1)-[ld1:LODC_DEFINITION]->(r1:Resource)
+WHERE NOT (s1)-[:INFERRED_REFERENCE]-(r1)
+AND ld1.cosine_similarity > 0.16
+WITH np1, r1, s1, f1, ld1, [labels(f1), labels(np1), labels(r1)] AS l LIMIT 100000
+UNWIND l AS lu
+UNWIND lu AS luu
+WITH COLLECT(luu) AS luuc, f1, np1, r1, ld1, s1
+MERGE (s1)-[ir:INFERRED_REFERENCE]-(r1)
+SET ir.path = [f1.uuid, np1.uuid, r1.uri]
+SET ir.path_labels = luuc
+SET ir.strength = ld1.cosine_similarity
+// Result: Repeated manual runs until no changes.
+// May need to rerun as LODC_DEFINITION rels are still being added
+
+// Step 2: Reconstruct Path
+MATCH (n2)<-[ir:INFERRED_REFERENCE]-(n1)-[]->(a)-[]->(b)-[]->(n2) // Find all paths
+RETURN n1, a, b, n2
