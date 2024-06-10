@@ -4,6 +4,7 @@
         "available": true,
         "url": "https://dbpedia.org/sparql/",
         "data_path": "https://dbpedia.org/data/",
+        "relation_base_uris": ["http://dbpedia.org/"],
         "ontology_base_url": "http://dbpedia.org/ontology/",
         "default-graph-uri": "http://dbpedia.org",
         "url_key": "value",
@@ -20,7 +21,9 @@
         "results_keys": ["results|bindings"],
         "description_keys": ["itemDescription|value"],
         "identifier_keys": ["item|value"],
-        "label_keys": ["itemLabel|value"]
+        "label_keys": ["itemLabel|value"],
+        "prop_title_keys": ["results|bindings|"],
+        "prop_description_keys": []
     },
     {
         "name": "Getty",
@@ -44,6 +47,7 @@
         "available": true,
         "url": "https://query.wikidata.org/sparql",
         "data_path": "https://www.wikidata.org/wiki/Special:EntityData",
+        "relation_base_uris": ["http://www.wikidata.org/"],
         "refresh": false,
         "query_template": "SELECT ?item ?itemLabel ?itemDescription WHERE {{ ?item ?p \"{term}\"@en. ?article schema:about ?item. ?article schema:inLanguage \"en\". ?article schema:isPartOf <https://en.wikipedia.org/>. SERVICE wikibase:label {{ bd:serviceParam wikibase:language \"en\" }} }} LIMIT 5",
         "headers": {

@@ -32,8 +32,8 @@
     "get_context": {
         "downstream": [],
         "upstream": [
-            "encode_contexts",
-            "process_and_encode_samples"
+            "process_and_encode_samples",
+            "encode_contexts"
         ]
     },
     "get_embedding": {
@@ -48,10 +48,10 @@
             "get_embedding"
         ],
         "upstream": [
-            "encode_contexts",
-            "filter_mentions_by_longest_term",
+            "process_node_fields",
             "process_and_encode_samples",
-            "process_node_fields"
+            "filter_mentions_by_longest_term",
+            "encode_contexts"
         ]
     },
     "process_and_encode_samples": {
@@ -68,8 +68,8 @@
         "upstream": [
             "serialize_processed_data",
             "process_candidate_definitions",
-            "collect_and_process_contexts",
-            "convert_to_serializable"
+            "convert_to_serializable",
+            "collect_and_process_contexts"
         ]
     },
     "serialize_processed_data": {
@@ -101,8 +101,8 @@
     "collect_and_process_contexts": {
         "downstream": [
             "process_candidate_definitions",
-            "rank_embeddings",
-            "convert_to_serializable"
+            "convert_to_serializable",
+            "rank_embeddings"
         ],
         "upstream": []
     },
@@ -111,9 +111,9 @@
             "format_json_topology"
         ],
         "upstream": [
-            "add_best_lodc_definitions",
             "filter_mentions_by_longest_term",
-            "collect_and_process_contexts"
+            "collect_and_process_contexts",
+            "add_best_lodc_definitions"
         ]
     },
     "extract_definitions": {
@@ -173,14 +173,18 @@
             "save_json_with_term"
         ]
     },
+    "fetch_title_description": {
+        "downstream": [],
+        "upstream": []
+    },
     "load_json": {
         "downstream": [
             "local_path"
         ],
         "upstream": [
             "get_primary_json",
-            "load_and_extract_definitions",
-            "create_definitions_dictionary"
+            "create_definitions_dictionary",
+            "load_and_extract_definitions"
         ]
     },
     "save_json_response": {
@@ -245,14 +249,18 @@
             "process_csv_in_chunks"
         ]
     },
+    "set_and_ensure_path": {
+        "downstream": [],
+        "upstream": []
+    },
     "create_dataframe_from_values": {
         "downstream": [],
         "upstream": []
     },
     "process_csv_in_chunks": {
         "downstream": [
-            "extract_keyphrases",
             "get_last_processed_chunk",
+            "extract_keyphrases",
             "set_last_processed_chunk"
         ],
         "upstream": []
@@ -273,14 +281,14 @@
     },
     "format_value": {
         "downstream": [
-            "format_list",
-            "format_dict"
+            "format_dict",
+            "format_list"
         ],
         "upstream": [
-            "format_mentions",
-            "format_top_mentions",
+            "format_dict",
             "format_list",
-            "format_dict"
+            "format_mentions",
+            "format_top_mentions"
         ]
     },
     "format_dict": {
@@ -349,18 +357,18 @@
             "get_json_topology"
         ],
         "upstream": [
-            "normalize_candidate_definitions",
+            "process_candidate_definitions",
             "add_best_lodc_definitions",
-            "rank_embeddings",
             "create_query_from_mention",
-            "process_candidate_definitions"
+            "normalize_candidate_definitions",
+            "rank_embeddings"
         ]
     },
     "create_query_from_mention": {
         "downstream": [
             "generate_import_rdf_query",
-            "get_node_id",
             "format_json_topology",
+            "get_node_id",
             "generate_merge_relationship_query"
         ],
         "upstream": [
@@ -432,11 +440,11 @@
     },
     "add_best_lodc_definitions": {
         "downstream": [
+            "process_candidate_definitions",
             "format_json_topology",
-            "rank_embeddings",
-            "find_mentions_and_context",
             "filter_mentions_by_longest_term",
-            "process_candidate_definitions"
+            "rank_embeddings",
+            "find_mentions_and_context"
         ],
         "upstream": [
             "process_nodes"
@@ -494,17 +502,17 @@
             "create_definitions_dictionary"
         ],
         "upstream": [
-            "add_best_lodc_definitions",
-            "process_node_fields"
+            "process_node_fields",
+            "add_best_lodc_definitions"
         ]
     },
     "process_endpoints": {
         "downstream": [
+            "get_primary_json",
             "nest_secondary_json",
-            "get_secondary_json",
-            "fetch_urls",
             "save_json_response",
-            "get_primary_json"
+            "get_secondary_json",
+            "fetch_urls"
         ],
         "upstream": []
     },
@@ -519,9 +527,9 @@
     },
     "get_secondary_json": {
         "downstream": [
+            "fetch_json_data",
             "handle_ontology_url",
-            "remove_duplicates_from_json",
-            "fetch_json_data"
+            "remove_duplicates_from_json"
         ],
         "upstream": [
             "process_endpoints"
@@ -547,33 +555,33 @@
             "unpack_sublists"
         ],
         "upstream": [
-            "unpack_sublists",
-            "search_json_for_keys"
+            "search_json_for_keys",
+            "unpack_sublists"
         ]
     },
     "search_json_for_keys": {
         "downstream": [
-            "unpack_sublists",
-            "search_json_for_keys"
+            "search_json_for_keys",
+            "unpack_sublists"
         ],
         "upstream": [
             "search_json_for_keys",
-            "filter_json_by_keys",
-            "load_and_extract_definitions"
+            "load_and_extract_definitions",
+            "filter_json_by_keys"
         ]
     },
     "remove_duplicates_from_json": {
         "downstream": [],
         "upstream": [
             "make_hashable",
-            "filter_and_deduplicate_json",
-            "get_secondary_json"
+            "get_secondary_json",
+            "filter_and_deduplicate_json"
         ]
     },
     "make_hashable": {
         "downstream": [
-            "remove_duplicates_from_json",
-            "make_hashable"
+            "make_hashable",
+            "remove_duplicates_from_json"
         ],
         "upstream": [
             "make_hashable"
@@ -584,8 +592,8 @@
             "remove_empty"
         ],
         "upstream": [
-            "remove_empty",
-            "recursive_apply"
+            "recursive_apply",
+            "remove_empty"
         ]
     },
     "apply_filters": {
@@ -603,8 +611,8 @@
     "recursive_apply": {
         "downstream": [
             "apply_filter_to_list",
-            "remove_empty",
-            "recursive_apply"
+            "recursive_apply",
+            "remove_empty"
         ],
         "upstream": [
             "recursive_apply"
@@ -612,13 +620,13 @@
     },
     "filter_and_deduplicate_json": {
         "downstream": [
+            "filter_and_deduplicate_json",
             "apply_filters",
-            "remove_duplicates_from_json",
-            "filter_and_deduplicate_json"
+            "remove_duplicates_from_json"
         ],
         "upstream": [
-            "filter_json_by_keys",
-            "filter_and_deduplicate_json"
+            "filter_and_deduplicate_json",
+            "filter_json_by_keys"
         ]
     },
     "search_json": {
@@ -626,8 +634,8 @@
             "search_json"
         ],
         "upstream": [
-            "collect_values_with_key_specific_filters",
-            "search_json"
+            "search_json",
+            "collect_values_with_key_specific_filters"
         ]
     },
     "collect_values_with_key_specific_filters": {
@@ -640,8 +648,8 @@
     },
     "filter_json_by_keys": {
         "downstream": [
-            "search_json_for_keys",
-            "filter_and_deduplicate_json"
+            "filter_and_deduplicate_json",
+            "search_json_for_keys"
         ],
         "upstream": []
     },
@@ -657,16 +665,16 @@
     },
     "process_candidate_definitions": {
         "downstream": [
-            "normalize_candidate_definitions",
-            "format_json_topology",
-            "load_and_extract_definitions",
             "convert_to_serializable",
-            "get_embedding"
+            "format_json_topology",
+            "get_embedding",
+            "normalize_candidate_definitions",
+            "load_and_extract_definitions"
         ],
         "upstream": [
-            "add_best_lodc_definitions",
             "filter_mentions_by_longest_term",
-            "collect_and_process_contexts"
+            "collect_and_process_contexts",
+            "add_best_lodc_definitions"
         ]
     },
     "create_definitions_dictionary": {
@@ -679,16 +687,16 @@
     },
     "fetch_and_process_nodes": {
         "downstream": [
-            "process_nodes",
-            "fetch_nodes_wrapper"
+            "fetch_nodes_wrapper",
+            "process_nodes"
         ],
         "upstream": []
     },
     "process_nodes": {
         "downstream": [
-            "add_best_lodc_definitions",
             "process_node_fields",
-            "generate_and_execute_queries"
+            "generate_and_execute_queries",
+            "add_best_lodc_definitions"
         ],
         "upstream": [
             "fetch_and_process_nodes"
@@ -696,9 +704,9 @@
     },
     "process_node_fields": {
         "downstream": [
-            "find_mentions_and_context",
+            "add_mentions_to_node",
             "encode_context",
-            "add_mentions_to_node"
+            "find_mentions_and_context"
         ],
         "upstream": [
             "process_nodes"
@@ -706,8 +714,8 @@
     },
     "generate_and_execute_queries": {
         "downstream": [
-            "run_query",
-            "create_query_from_mention"
+            "create_query_from_mention",
+            "run_query"
         ],
         "upstream": [
             "process_nodes"
@@ -753,15 +761,15 @@
             "remove_keys"
         ],
         "upstream": [
-            "remove_keys",
-            "compare_json_structures"
+            "compare_json_structures",
+            "remove_keys"
         ]
     },
     "compare_json_structures": {
         "downstream": [
-            "remove_keys",
             "get_json_topology",
-            "normalize_structure"
+            "normalize_structure",
+            "remove_keys"
         ],
         "upstream": []
     }

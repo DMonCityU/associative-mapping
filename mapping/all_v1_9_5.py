@@ -1032,6 +1032,52 @@ def save_json(json_data, file_path, relative_path=False):
         json.dump(json_data, file, indent=4)
 
 @audit_logger(functions_to_audit)
+def fetch_title_description(endpoint, uri, get_requests):
+    """
+    Fetches the title and description for a given URI using a specified SPARQL endpoint configuration. 
+    The data is retrieved using a GET request, and the request's parameters are built dynamically based on the endpoint configuration.
+
+    Args:
+        endpoint (dict): A dictionary containing the endpoint configuration such as URL, query template, and optional parameters.
+        uri (str): The URI to query.
+        get_requests (function): A function to execute the GET request. It should accept a URL and headers, and return a response object.
+
+    Returns:
+        dict or None: Returns the JSON data as a dictionary if the request is successful (HTTP 200); otherwise, returns None.
+    """
+    # Construct query URL
+    query = "DESCRIBE <{uri}>"
+    url = endpoint['url']
+    headers = endpoint.get('headers', {})
+
+    # Set up parameters including any optional ones present in the endpoint configuration
+    params = {
+        'query': query,
+        **{k: endpoint[k] for k in [
+            'default-graph-uri', 'format', 'timeout', 'signal-void', 'signal_unconnected'
+        ] if k in endpoint}
+    }
+
+    # URL encode the parameters
+    encoded_params = urllib.parse.urlencode(params, quote_via=urllib.parse.quote)
+    full_url = f"{url}?{encoded_params}"
+    logger.critical(f"full_url: {full_url}")
+    # Perform the GET request using the provided get_requests function
+    try:
+        response = get_requests(full_url, headers=headers)
+        if response.status_code == 200:
+            return response.json()
+        else:
+            print(f"HTTP {response.status_code} received for URL: {full_url}")
+            return None
+    except RuntimeError as e:
+        print(f"Runtime error during fetching data: {e}")
+        return None
+    except Exception as e:
+        print(f"Unexpected error during fetching data: {e}")
+        return None
+
+@audit_logger(functions_to_audit)
 def load_json(file_path, relative_path=False):
     if relative_path:
         file_path = local_path(file_path)
@@ -1236,6 +1282,12 @@ def set_last_processed_chunk(state_file, chunk_index):
         file.write(str(chunk_index))
 
 @audit_logger(functions_to_audit)
+def set_and_ensure_path(base_path, path_extension):
+    full_path = os.path.join(base_path, path_extension)
+    os.makedirs(full_path, exist_ok=True)
+    return full_path
+
+@audit_logger(functions_to_audit)
 def create_dataframe_from_values(dataframes_dict, save_to_csv=False, output_filename="output.csv", include_filename=False):
     # Set to collect unique values and their filenames from all DataFrames
     unique_values = set()
@@ -1323,8 +1375,10 @@ def load_csv_files(directory_path):
     # Prepare a dictionary to hold filenames and DataFrames
     dataframes_dict = {}
     
-    # Generate a list of all csv files in the directory
-    csv_files = glob.glob(f'{directory_path}/*.csv')
+    # Generate a list of all csv files in the directory and subdirectories
+    csv_files = [os.path.join(root, file)
+                 for root, dirs, files in os.walk(directory_path)
+                 for file in files if file.endswith('.csv')]
     logger.info(f"Found {len(csv_files)} csv files to process")
     
     # Iterate over the list of file paths
@@ -1345,6 +1399,7 @@ def load_csv_files(directory_path):
         dataframes_dict[filename] = df_clean
     
     return dataframes_dict
+
 
 
 
@@ -1736,7 +1791,7 @@ def unpack_node(node, max_iterations=10):
 # Network
 
 @audit_logger(functions_to_audit)
-def get_request(url, get_requests, headers=None):
+def get_request(url, get_requests=0, headers=None):
     try:
         response = requests.get(url, headers=headers)
     except requests.exceptions.RequestException as e:
@@ -2279,10 +2334,9 @@ def fetch_and_cache_json(endpoint, term, get_requests):
         
         # Set up parameters including any optional ones present in the endpoint configuration
         params = {
-            'query': query,  # Assuming 'query' needs to remain unencoded
+            'query': query,
             **{k: endpoint[k] for k in [
                 'default-graph-uri', 'format', 'timeout'
-                #'signal_void', 'signal_unconnected'  # Uncomment or modify depending on actual use
             ] if k in endpoint}
         }
         
@@ -2381,7 +2435,7 @@ def search_json_for_keys(data, compound_key):
             logger.error(f"Potentially invalid key: {compound_key}")
             raise
     
-    logger.debug(f'Searching key: {key} in data: {data}')
+    logger.critical(f'Searching key: {key} in data: {data}')
 
     if isinstance(data, dict):
         if key in data:
